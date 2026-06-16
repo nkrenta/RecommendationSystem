@@ -52,4 +52,6 @@ public class RecommendationController {
         return ResponseEntity.ok(response);
     }
 }
-
+//cd515076-5d8a-44be-930e-8d4fcb79f42d  - invest 500
+//d4a4d619-9a0c-4fc5-b0cb-76c49409546b - Top Saving
+//1f9b149c-6577-448a-bc94-16bea229b71a - простой кредит
