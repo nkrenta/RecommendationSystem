@@ -1,6 +1,6 @@
 -- liquibase formatted sql
 
--- changeset mkorolkov:1
+-- changeset yar:1
 CREATE TABLE dynamic_rules (
     id BIGSERIAL PRIMARY KEY,
     product_name VARCHAR(255) NOT NULL,

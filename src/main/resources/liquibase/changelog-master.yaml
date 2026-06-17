@@ -5,5 +5,3 @@ databaseChangeLog:
       file: liquibase/scripts/rule_queries.sql
   - include:
       file: liquibase/scripts/rule_query_arguments.sql
-  - include:
-      file: liquibase/scripts/lesson-db-migration.sql

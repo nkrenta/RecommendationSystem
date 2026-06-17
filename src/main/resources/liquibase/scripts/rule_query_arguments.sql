@@ -1,6 +1,6 @@
 -- liquibase formatted sql
 
--- changeset mkorolkov:3
+-- changeset yar:1
 CREATE TABLE rule_query_arguments (
     query_id BIGINT NOT NULL,
     argument VARCHAR(255),

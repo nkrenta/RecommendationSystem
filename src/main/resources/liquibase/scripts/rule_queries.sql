@@ -1,6 +1,6 @@
 -- liquibase formatted sql
 
--- changeset mkorolkov:2
+-- changeset yar:1
 CREATE TABLE rule_queries (
     id BIGSERIAL PRIMARY KEY,
     query_type VARCHAR(255) NOT NULL,
