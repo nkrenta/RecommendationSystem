@@ -29,5 +29,3 @@ public class RecommendationService {
         return new RecommendationResponse(userId, recommendations);
     }
 }
-
-

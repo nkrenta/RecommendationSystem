@@ -2,7 +2,7 @@ package ru.skypro.recommendationsystem.service.RuleSet;
 
 import org.springframework.stereotype.Component;
 import ru.skypro.recommendationsystem.DTO.RecommendationDTO;
-import ru.skypro.recommendationsystem.service.ProductCheckerService;
+import ru.skypro.recommendationsystem.repository.RecommendationsRepository;
 import ru.skypro.recommendationsystem.service.RecommendationRuleSet;
 
 import java.util.Optional;
@@ -17,23 +17,23 @@ import java.util.UUID;
 @Component
 public class UsualCreditRuleImpl implements RecommendationRuleSet {
 
-    private final ProductCheckerService productChecker;
+    private final RecommendationsRepository recommendationsRepository;
 
-    public UsualCreditRuleImpl(ProductCheckerService productChecker) {
-        this.productChecker = productChecker;
+    public UsualCreditRuleImpl(RecommendationsRepository recommendationsRepository) {
+        this.recommendationsRepository = recommendationsRepository;
     }
 
 
     @Override
     public Optional<RecommendationDTO> checkRecommendation(UUID userId) {
         // Проверяем отсутствие CREDIT продуктов
-        if (productChecker.hasProductType(userId, "CREDIT")) {
+        if (recommendationsRepository.hasProductType(userId, "CREDIT")) {
             return Optional.empty();
         }
 
         // Получаем суммы по DEBIT продуктам
-        Double debitDeposits = productChecker.getTotalDepositsByProductType(userId, "DEBIT");
-        Double debitWithdrawals = productChecker.getTotalWithdrawalsByProductType(userId, "DEBIT");
+        Double debitDeposits = recommendationsRepository.getTotalDepositsByProductType(userId, "DEBIT");
+        Double debitWithdrawals = recommendationsRepository.getTotalWithdrawalsByProductType(userId, "DEBIT");
 
         // Проверяем DEBIT deposits > DEBIT withdrawals
         if (debitDeposits == null || debitWithdrawals == null || debitDeposits <= debitWithdrawals) {
