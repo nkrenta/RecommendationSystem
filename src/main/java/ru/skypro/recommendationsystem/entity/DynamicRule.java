@@ -25,14 +25,43 @@ public class DynamicRule {
     @JoinColumn(name = "rule_id")
     private List<RuleQuery> queries;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public String getProductName() { return productName; }
-    public void setProductName(String productName) { this.productName = productName; }
-    public UUID getProductId() { return productId; }
-    public void setProductId(UUID productId) { this.productId = productId; }
-    public String getProductText() { return productText; }
-    public void setProductText(String productText) { this.productText = productText; }
-    public List<RuleQuery> getQueries() { return queries; }
-    public void setQueries(List<RuleQuery> queries) { this.queries = queries; }
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public UUID getProductId() {
+        return productId;
+    }
+
+    public void setProductId(UUID productId) {
+        this.productId = productId;
+    }
+
+    public String getProductText() {
+        return productText;
+    }
+
+    public void setProductText(String productText) {
+        this.productText = productText;
+    }
+
+    public List<RuleQuery> getQueries() {
+        return queries;
+    }
+
+    public void setQueries(List<RuleQuery> queries) {
+        this.queries = queries;
+    }
 }

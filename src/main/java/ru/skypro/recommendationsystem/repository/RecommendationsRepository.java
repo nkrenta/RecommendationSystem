@@ -25,38 +25,35 @@ public class RecommendationsRepository {
 
      //создаём метод для проверки наличия продукта определённого типа у пользователя
     public boolean hasProductType (UUID userId, String productType){
-        Boolean result = jdbcTemplate.queryForObject(
+        return jdbcTemplate.queryForObject(
                 "SELECT COUNT(*)>0 FROM transactions t "+       //проверка наличия хотя бы одной записи
                         "JOIN products p ON t.product_id = p.id "+  //объединение таблицы транзакций и продуктов
                         "WHERE t.user_id = ? AND p.type = ?",       //фильтрация получившейся таблицы по id пользователя и типу продукта
                 Boolean.class,
                 userId,
                 productType);
-                return result;
     }
 
     //создаём метод для получения суммарного пополнения по типу продукта
     public Double getTotalDepositsByProductType(UUID userId, String productType) {
-        Double result = jdbcTemplate.queryForObject(
+        return jdbcTemplate.queryForObject(
                 "SELECT COALESCE(SUM(t.amount), 0) FROM transactions t " + // Возвращает 0, если транзакций нет.
                 "JOIN products p ON t.product_id = p.id " +                    //объединение таблицы транзакций и продуктов
                 "WHERE t.user_id = ? AND p.type = ? AND t.type = 'DEPOSIT'",   // Фильтрует таблицу только по пополнению Deposit
                 Double.class,
                 userId,
                 productType);
-        return result;
     }
 
      //создаём метод для получения суммарных трат по типу продукта
     public Double getTotalWithdrawalsByProductType(UUID userId, String productType) {
-        Double result = jdbcTemplate.queryForObject(
+        return jdbcTemplate.queryForObject(
          "SELECT COALESCE(SUM(t.amount), 0) FROM transactions t " +       // Возвращает 0, если транзакций нет.
                 "JOIN products p ON t.product_id = p.id " +                   //объединение таблицы транзакций и продуктов
                 "WHERE t.user_id = ? AND p.type = ? AND t.type = 'WITHDRAW'",// Фильтрует таблицу только по тратам
                 Double.class,
                 userId,
                 productType);
-        return result;
     }
 }
 
