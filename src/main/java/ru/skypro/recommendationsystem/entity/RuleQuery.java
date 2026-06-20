@@ -2,6 +2,7 @@ package ru.skypro.recommendationsystem.entity;
 
 import jakarta.persistence.*;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "rule_queries")
@@ -9,7 +10,7 @@ public class RuleQuery {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private UUID id;
 
     @Column(name = "query_type", nullable = false)
     private String query;
@@ -22,11 +23,11 @@ public class RuleQuery {
     @Column(name = "negate", nullable = false)
     private boolean negate;
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

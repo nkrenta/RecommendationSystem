@@ -1,6 +1,8 @@
 package ru.skypro.recommendationsystem.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -9,8 +11,13 @@ import java.util.UUID;
 public class DynamicRule {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @Column(name = "id", updatable = false, nullable = false)
+    private UUID id;
 
     @Column(name = "product_name", nullable = false)
     private String productName;
@@ -25,11 +32,11 @@ public class DynamicRule {
     @JoinColumn(name = "rule_id")
     private List<RuleQuery> queries;
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
