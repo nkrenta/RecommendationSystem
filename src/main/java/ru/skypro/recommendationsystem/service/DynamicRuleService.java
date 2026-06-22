@@ -4,6 +4,7 @@ package ru.skypro.recommendationsystem.service;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.skypro.recommendationsystem.entity.DynamicRule;
 import ru.skypro.recommendationsystem.repository.DynamicRuleRepository;
 import ru.skypro.recommendationsystem.repository.RecommendationsRepository;
@@ -23,7 +24,9 @@ public class DynamicRuleService {
     }
 
     //создание динамического правила
+    @Transactional
     public DynamicRule createRule(DynamicRule rule) {
+        rule.setId(UUID.randomUUID());
         return repository.save(rule);
     }
 

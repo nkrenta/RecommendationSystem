@@ -9,7 +9,8 @@ import java.util.UUID;
 public class RuleQuery {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
     @Column(name = "query_type", nullable = false)

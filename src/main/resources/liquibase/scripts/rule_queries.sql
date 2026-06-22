@@ -2,7 +2,7 @@
 
 -- changeset yar:2
 CREATE TABLE rule_queries (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY,
     query_type VARCHAR(255) NOT NULL,
     negate BOOLEAN NOT NULL,
     rule_id UUID NOT NULL,
