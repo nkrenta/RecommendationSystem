@@ -26,7 +26,6 @@ import java.util.Map;
 @Profile("!test")
 public class DataSourceConfig {
 
-    @Primary
     @Bean(name = "recommendationsDataSource")
     public DataSource recommendationsDataSource() {
         HikariDataSource dataSource = new HikariDataSource();
@@ -36,7 +35,7 @@ public class DataSourceConfig {
         return dataSource;
     }
 
-
+    @Primary
     @Bean(name = "secondDataSource")
     public DataSource secondDataSource() {
         HikariDataSource dataSource = new HikariDataSource();
