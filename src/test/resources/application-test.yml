@@ -1,22 +1,19 @@
 spring:
   datasource:
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-  sql:
-    init:
-      mode: always
-      schema-locations: classpath:schema.sql
-      data-locations: classpath:data.sql
-  jpa:
-    defer-datasource-initialization: true
-    hibernate:
-      ddl-auto: none
-  liquibase:
-    enabled: false
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
 
-#Пояснение:
-#
-#jdbc:h2:mem:testdb — создаёт in-memory базу данных testdb, которая существует только во время тестов.
-#DB_CLOSE_DELAY=-1 — сохраняет базу данных до завершения работы приложения.
-#DB_CLOSE_ON_EXIT=FALSE: Предотвращает автоматическое закрытие базы данных при завершении JVM, что полезно для отладки через H2-консоль.
-#spring.sql.init — автоматически выполняет SQL-скрипты для создания схемы (schema.sql) и загрузки тестовых данных (data.sql).
-#spring.jpa.defer-datasource-initialization: true позволяет отложить выполнение data.sql до завершения инициализации схемы (schema.sql).
+  jpa:
+    hibernate:
+      ddl-auto: create-drop  # <-- САМОЕ ВАЖНОЕ: создает таблицы при старте, удаляет при финише
+    show-sql: true           # <-- Полезно: увидишь в логах SQL-запросы, которые делает Hibernate
+
+  h2:
+    console:
+      enabled: true          # <-- Можно будет зайти на /h2-console и посмотреть данные во время теста
+      path: /h2-console      # <-- Путь к консоли
+
+  liquibase:
+    enabled: false           # <-- Отключаем миграции Liquibase для тестов, чтобы не было конфликтов версий

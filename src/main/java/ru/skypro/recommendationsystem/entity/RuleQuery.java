@@ -25,6 +25,18 @@ public class RuleQuery {
     @Column(name = "negate", nullable = false)
     private boolean negate;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "rule_id", nullable = false) // Имя колонки в таблице rule_queries
+    private DynamicRule dynamicRule; // Имя переменной должно совпадать с mappedBy ниже
+
+    public DynamicRule getDynamicRule() {
+        return dynamicRule;
+    }
+
+    public void setDynamicRule(DynamicRule dynamicRule) {
+        this.dynamicRule = dynamicRule;
+    }
+
     public UUID getId() {
         return id;
     }

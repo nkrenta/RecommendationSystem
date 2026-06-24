@@ -3,6 +3,7 @@ package ru.skypro.recommendationsystem.entity;
 import jakarta.persistence.*;
 import org.springframework.data.domain.Persistable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,9 +22,8 @@ public class DynamicRule implements Persistable<UUID> {
     private UUID productId;
     @Column(name = "product_text", nullable = false)
     private String productText;
-    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "rule_id", nullable = false)
-    private List<RuleQuery> queries;
+    @OneToMany(mappedBy = "dynamicRule", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<RuleQuery> queries = new ArrayList<>(); // Инициализируй сразу, чтобы не было null
 
     @Override
     public boolean isNew() {

@@ -11,6 +11,7 @@ import ru.skypro.recommendationsystem.service.RecommendationRuleSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Component
 public class DynamicRuleSet implements RecommendationRuleSet {
@@ -24,15 +25,15 @@ public class DynamicRuleSet implements RecommendationRuleSet {
     }
 
     @Override
-    public Optional<RecommendationDTO> checkRecommendation(UUID userId) {
+    public List<RecommendationDTO> checkRecommendation(UUID userId) {
         return dynamicRuleRepository.findAllWithQueries().stream()
                 .map(rule -> checkRuleForUser(userId, rule))
                 .filter(Optional::isPresent)
-                .findFirst()
-                .orElse(Optional.empty());
+                .map(Optional::get)
+                .collect(Collectors.toList()); // <-- Собираем ВСЕ совпадения
     }
 
-    Optional<RecommendationDTO> checkRuleForUser(UUID userId, DynamicRule rule) {
+    private Optional<RecommendationDTO> checkRuleForUser(UUID userId, DynamicRule rule) {
         boolean allConditionsMet = rule.getQueries().stream()
                 .allMatch(query -> checkCondition(userId, query));
 
