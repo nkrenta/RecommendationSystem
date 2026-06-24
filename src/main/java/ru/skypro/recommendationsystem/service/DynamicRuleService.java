@@ -10,7 +10,6 @@ import ru.skypro.recommendationsystem.repository.DynamicRuleRepository;
 import ru.skypro.recommendationsystem.repository.RecommendationsRepository;
 
 
-
 import java.util.List;
 import java.util.UUID;
 

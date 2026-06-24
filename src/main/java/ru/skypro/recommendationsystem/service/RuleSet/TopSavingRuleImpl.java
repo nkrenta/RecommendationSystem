@@ -17,7 +17,7 @@ public class TopSavingRuleImpl implements RecommendationRuleSet {
 
     private final RecommendationsRepository recommendationsRepository;
 
-    public TopSavingRuleImpl( RecommendationsRepository recommendationsRepository) {
+    public TopSavingRuleImpl(RecommendationsRepository recommendationsRepository) {
         this.recommendationsRepository = recommendationsRepository;
     }
 

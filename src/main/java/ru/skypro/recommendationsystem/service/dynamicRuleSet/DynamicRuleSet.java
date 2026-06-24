@@ -46,14 +46,11 @@ public class DynamicRuleSet implements RecommendationRuleSet {
 
     private boolean checkCondition(UUID userId, RuleQuery query) {
         return switch (query.getQuery()) {
-            case "USER_OF" ->
-                    recommendationsRepository.hasProductType(userId, query.getArguments().get(0));
+            case "USER_OF" -> recommendationsRepository.hasProductType(userId, query.getArguments().get(0));
             case "ACTIVE_USER_OF" ->
                     recommendationsRepository.getTransactionCount(userId, query.getArguments().get(0)) >= 5;
-            case "TRANSACTION_SUM_COMPARE" ->
-                    checkTransactionSum(userId, query);
-            case "TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW" ->
-                    checkDepositWithdrawCompare(userId, query);
+            case "TRANSACTION_SUM_COMPARE" -> checkTransactionSum(userId, query);
+            case "TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW" -> checkDepositWithdrawCompare(userId, query);
             default -> throw new IllegalArgumentException("Unknown query type: " + query.getQuery());
         } ^ query.isNegate();
     }
