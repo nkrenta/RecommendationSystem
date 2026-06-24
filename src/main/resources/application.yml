@@ -1,25 +1,41 @@
 spring:
   application:
     name: recommendation-system
+
+  # --- ГЛАВНЫЙ ИСТОЧНИК ДАННЫХ (H2 - файл на диске) ---
   datasource:
-    url: jdbc:h2:file:./db/transaction
+    url: jdbc:h2:file:./db/transaction;MODE=PostgreSQL;DB_CLOSE_ON_EXIT=FALSE
     driverClassName: org.h2.Driver
     username: sa
-    password:
+    password: password  # <--- КРИТИЧНО: Не пустой! H2 2.3 требует пароль.
+
+  # --- ВТОРОЙ ИСТОЧНИК ДАННЫХ (Postgres - правила) ---
   second-datasource:
+    enabled: true
     url: jdbc:postgresql://localhost:5432/rules_db
     driverClassName: org.postgresql.Driver
     username: username
     password: password
+
   sql:
     init:
       mode: never
+
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: none  # Отключаем авто-создание таблиц. Таблицы делает Liquibase.
+    open-in-view: false # Убираем предупреждение из логов
+
   liquibase:
+    enabled: false  # <--- ВАЖНО: Отключаем авто-запуск Liquibase из YAML.
+    # Мы будем управлять им вручную в Java-коде, чтобы привязать к Postgres.
     change-log: classpath:liquibase/changelog-master.yaml
-    enabled: true
-    url: jdbc:postgresql://localhost:5432/rules_db
-    user: username
-    password: password
+    # Удали строки url, user, password отсюда! Они вызывают конфликт.
+
+  h2:
+    console:
+      enabled: true   # <--- Включаем консоль H2
+      path: /h2-console # Адрес: http://localhost:8080/h2-console
+
+server:
+  port: 8080

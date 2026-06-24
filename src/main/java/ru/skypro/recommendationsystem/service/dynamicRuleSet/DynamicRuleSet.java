@@ -25,7 +25,7 @@ public class DynamicRuleSet implements RecommendationRuleSet {
 
     @Override
     public Optional<RecommendationDTO> checkRecommendation(UUID userId) {
-        return dynamicRuleRepository.findAll().stream()
+        return dynamicRuleRepository.findAllWithQueries().stream()
                 .map(rule -> checkRuleForUser(userId, rule))
                 .filter(Optional::isPresent)
                 .findFirst()
