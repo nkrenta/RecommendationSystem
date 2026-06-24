@@ -32,7 +32,7 @@ public class DynamicRuleService {
 
     //получение всех динамических правил
     public List<DynamicRule> getAllRules() {
-        return repository.findAll();
+        return repository.findAllWithQueries();
     }
 
     //удаление динамического правила
