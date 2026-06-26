@@ -1,5 +1,6 @@
 package ru.skypro.recommendationsystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -25,9 +26,10 @@ public class RuleQuery {
     @Column(name = "negate", nullable = false)
     private boolean negate;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "rule_id", nullable = false) // Имя колонки в таблице rule_queries
-    private DynamicRule dynamicRule; // Имя переменной должно совпадать с mappedBy ниже
+    @JoinColumn(name = "rule_id", nullable = false)
+    private DynamicRule dynamicRule;
 
     public DynamicRule getDynamicRule() {
         return dynamicRule;

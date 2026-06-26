@@ -20,6 +20,9 @@ public class DynamicRuleService {
     @Transactional
     public DynamicRule createRule(DynamicRule rule) {
         rule.setId(UUID.randomUUID());
+        if (rule.getQueries() != null) {
+            rule.getQueries().forEach(q -> q.setDynamicRule(rule));
+        }
         return repository.save(rule);
     }
 
