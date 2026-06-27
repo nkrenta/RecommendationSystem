@@ -31,11 +31,12 @@ public class DynamicRuleService {
     }
 
     @Transactional
-    public void deleteRule(UUID id) {
+    public boolean deleteRule(UUID id) {
         if (!repository.existsById(id)) {
-            throw new jakarta.persistence.EntityNotFoundException("Rule not found with id: " + id);
+            return false;
         }
         repository.deleteById(id);
+        return true;
     }
 }
 

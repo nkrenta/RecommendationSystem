@@ -1,3 +1,22 @@
+CREATE TABLE IF NOT EXISTS users (
+    id UUID PRIMARY KEY
+);
+
+CREATE TABLE IF NOT EXISTS products (
+    id UUID PRIMARY KEY,
+    type VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS transactions (
+    id UUID PRIMARY KEY,
+    product_id UUID NOT NULL,
+    user_id UUID NOT NULL,
+    type VARCHAR(50) NOT NULL,
+    amount DOUBLE NOT NULL,
+    FOREIGN KEY (product_id) REFERENCES products(id),
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
 CREATE TABLE IF NOT EXISTS dynamic_rules (
     id UUID PRIMARY KEY,
     product_name VARCHAR(255) NOT NULL,

@@ -7,13 +7,17 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create-drop  # <-- САМОЕ ВАЖНОЕ: создает таблицы при старте, удаляет при финише
-    show-sql: true           # <-- Полезно: увидишь в логах SQL-запросы, которые делает Hibernate
+      ddl-auto: create-drop
+    show-sql: true
+
+  sql:
+    init:
+      mode: always
 
   h2:
     console:
-      enabled: true          # <-- Можно будет зайти на /h2-console и посмотреть данные во время теста
-      path: /h2-console      # <-- Путь к консоли
+      enabled: true
+      path: /h2-console
 
   liquibase:
-    enabled: false           # <-- Отключаем миграции Liquibase для тестов, чтобы не было конфликтов версий
+    enabled: false

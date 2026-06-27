@@ -1,8 +1,5 @@
 package ru.skypro.recommendationsystem.controller;
 
-import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.recommendationsystem.entity.DynamicRule;
@@ -17,13 +14,15 @@ import java.util.UUID;
 public class DynamicRuleController {
     private final DynamicRuleService dynamicRuleService;
 
-    @Autowired
     public DynamicRuleController(DynamicRuleService dynamicRuleService) {
         this.dynamicRuleService = dynamicRuleService;
     }
 
     @PostMapping
     public ResponseEntity<DynamicRule> createRule(@RequestBody DynamicRule rule) {
+        if (rule == null || rule.getProductName() == null || rule.getProductId() == null || rule.getProductText() == null) {
+            return ResponseEntity.badRequest().build();
+        }
         DynamicRule createdRule = dynamicRuleService.createRule(rule);
         return ResponseEntity.ok(createdRule);
     }
@@ -36,14 +35,11 @@ public class DynamicRuleController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteRule(@PathVariable UUID id) {
-        dynamicRuleService.deleteRule(id);
+        boolean deleted = dynamicRuleService.deleteRule(id);
+        if (!deleted) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.noContent().build();
-    }
-
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handleNotFound(EntityNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(Map.of("error", ex.getMessage()));
     }
 
 }
