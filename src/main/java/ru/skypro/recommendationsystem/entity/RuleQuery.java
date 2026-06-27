@@ -18,7 +18,7 @@ public class RuleQuery {
     @Column(name = "query_type", nullable = false)
     private String query;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "rule_query_arguments", joinColumns = @JoinColumn(name = "query_id"))
     @Column(name = "argument")
     private List<String> arguments;
