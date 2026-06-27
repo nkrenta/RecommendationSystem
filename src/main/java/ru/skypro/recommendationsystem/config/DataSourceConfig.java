@@ -1,6 +1,7 @@
 package ru.skypro.recommendationsystem.config;
 
 import com.zaxxer.hikari.HikariDataSource;
+import liquibase.integration.spring.SpringLiquibase;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,7 +27,6 @@ import java.util.Map;
 @Profile("!test")
 public class DataSourceConfig {
 
-    @Primary
     @Bean(name = "recommendationsDataSource")
     public DataSource recommendationsDataSource() {
         HikariDataSource dataSource = new HikariDataSource();
@@ -36,7 +36,7 @@ public class DataSourceConfig {
         return dataSource;
     }
 
-
+    @Primary
     @Bean(name = "secondDataSource")
     public DataSource secondDataSource() {
         HikariDataSource dataSource = new HikariDataSource();
@@ -77,4 +77,14 @@ public class DataSourceConfig {
         transactionManager.setEntityManagerFactory(entityManagerFactory.getObject());
         return transactionManager;
     }
+
+    @Bean
+    public SpringLiquibase liquibaseForPostgres(@Qualifier("secondDataSource") DataSource secondDataSource) {
+        SpringLiquibase liquibase = new SpringLiquibase();
+        liquibase.setDataSource(secondDataSource); // <--- Привязываем к Postgres (второй источник)
+        liquibase.setChangeLog("classpath:liquibase/changelog-master.yaml");
+        liquibase.setDefaultSchema("public");
+        return liquibase;
+    }
+
 }

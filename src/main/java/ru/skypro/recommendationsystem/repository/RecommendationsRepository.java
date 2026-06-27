@@ -1,6 +1,8 @@
 package ru.skypro.recommendationsystem.repository;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -8,55 +10,65 @@ import java.util.UUID;
 
 @Repository
 public class RecommendationsRepository {
-
     private final JdbcTemplate jdbcTemplate;
+    private final CacheManager cacheManager;
 
-    public RecommendationsRepository(@Qualifier("recommendationsJdbcTemplate") JdbcTemplate jdbcTemplate) {
+    public RecommendationsRepository(
+            @Qualifier("recommendationsJdbcTemplate") JdbcTemplate jdbcTemplate,
+            CacheManager cacheManager) {
         this.jdbcTemplate = jdbcTemplate;
+        this.cacheManager = cacheManager;
     }
 
-    public int getRandomTransactionAmount(UUID user) {
-        Integer result = jdbcTemplate.queryForObject(
-                "SELECT amount FROM transactions t WHERE t.user_id = ? ORDER BY RAND() LIMIT 1",
-                Integer.class,
-                user);
-        return result != null ? result : 0;
-    }
-
-     //создаём метод для проверки наличия продукта определённого типа у пользователя
-    public boolean hasProductType (UUID userId, String productType){
-        Boolean result = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*)>0 FROM transactions t "+       //проверка наличия хотя бы одной записи
-                        "JOIN products p ON t.product_id = p.id "+  //объединение таблицы транзакций и продуктов
-                        "WHERE t.user_id = ? AND p.type = ?",       //фильтрация получившейся таблицы по id пользователя и типу продукта
+    public boolean hasProductType(UUID userId, String productType) {
+        Cache cache = cacheManager.getCache("userOfCache");
+        String key = userId + ":" + productType;
+        return cache.get(key, () -> jdbcTemplate.queryForObject(
+                "SELECT COUNT(*)>0 FROM transactions t " +
+                        "JOIN products p ON t.product_id = p.id " +
+                        "WHERE t.user_id = ? AND p.type = ?",
                 Boolean.class,
                 userId,
-                productType);
-                return result;
+                productType
+        ));
     }
 
-    //создаём метод для получения суммарного пополнения по типу продукта
     public Double getTotalDepositsByProductType(UUID userId, String productType) {
-        Double result = jdbcTemplate.queryForObject(
-                "SELECT COALESCE(SUM(t.amount), 0) FROM transactions t " + // Возвращает 0, если транзакций нет.
-                "JOIN products p ON t.product_id = p.id " +                    //объединение таблицы транзакций и продуктов
-                "WHERE t.user_id = ? AND p.type = ? AND t.type = 'DEPOSIT'",   // Фильтрует таблицу только по пополнению Deposit
+        Cache cache = cacheManager.getCache("sumCache");
+        String key = "deposit:" + userId + ":" + productType;
+        return cache.get(key, () -> jdbcTemplate.queryForObject(
+                "SELECT COALESCE(SUM(t.amount), 0) FROM transactions t " +
+                        "JOIN products p ON t.product_id = p.id " +
+                        "WHERE t.user_id = ? AND p.type = ? AND t.type = 'DEPOSIT'",
                 Double.class,
                 userId,
-                productType);
-        return result;
+                productType
+        ));
     }
 
-     //создаём метод для получения суммарных трат по типу продукта
     public Double getTotalWithdrawalsByProductType(UUID userId, String productType) {
-        Double result = jdbcTemplate.queryForObject(
-         "SELECT COALESCE(SUM(t.amount), 0) FROM transactions t " +       // Возвращает 0, если транзакций нет.
-                "JOIN products p ON t.product_id = p.id " +                   //объединение таблицы транзакций и продуктов
-                "WHERE t.user_id = ? AND p.type = ? AND t.type = 'WITHDRAW'",// Фильтрует таблицу только по тратам
+        Cache cache = cacheManager.getCache("sumCache");
+        String key = "withdraw:" + userId + ":" + productType;
+        return cache.get(key, () -> jdbcTemplate.queryForObject(
+                "SELECT COALESCE(SUM(t.amount), 0) FROM transactions t " +
+                        "JOIN products p ON t.product_id = p.id " +
+                        "WHERE t.user_id = ? AND p.type = ? AND t.type = 'WITHDRAW'",
                 Double.class,
                 userId,
-                productType);
-        return result;
+                productType
+        ));
+    }
+
+    public int getTransactionCount(UUID userId, String productType) {
+        Cache cache = cacheManager.getCache("activeUserCache");
+        String key = userId + ":" + productType;
+        return cache.get(key, () -> jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM transactions t " +
+                        "JOIN products p ON t.product_id = p.id " +
+                        "WHERE t.user_id = ? AND p.type = ?",
+                Integer.class,
+                userId,
+                productType
+        ));
     }
 }
-
