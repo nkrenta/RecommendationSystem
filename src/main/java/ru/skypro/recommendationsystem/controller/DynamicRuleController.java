@@ -20,19 +20,19 @@ public class DynamicRuleController {
         this.dynamicRuleService = dynamicRuleService;
     }
 
-    @PostMapping("/createRule")
+    @PostMapping
     public ResponseEntity<DynamicRule> createRule(@RequestBody DynamicRule rule) {
         DynamicRule createdRule = dynamicRuleService.createRule(rule);
         return ResponseEntity.ok(createdRule);
     }
 
-    @GetMapping("/getAllRules")
+    @GetMapping
     public ResponseEntity<Map<String, List<DynamicRule>>> getAllRules() {
         List<DynamicRule> rules = dynamicRuleService.getAllRules();
         return ResponseEntity.ok(Map.of("data", rules));
     }
 
-    @DeleteMapping("/deleteRule/{id}")
+    @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteRule(@PathVariable UUID id) {
         dynamicRuleService.deleteRule(id);
         return ResponseEntity.noContent().build();
