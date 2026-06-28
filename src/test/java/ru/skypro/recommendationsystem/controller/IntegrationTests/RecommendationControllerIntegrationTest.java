@@ -1,4 +1,4 @@
-package ru.skypro.recommendationsystem.controller;
+package ru.skypro.recommendationsystem.controller.IntegrationTests;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
