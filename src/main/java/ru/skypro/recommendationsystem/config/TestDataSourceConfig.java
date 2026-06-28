@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-@Profile("test")
+@Profile({"test", "it"})
 @EnableJpaRepositories(
         basePackages = "ru.skypro.recommendationsystem.repository",
         entityManagerFactoryRef = "secondEntityManagerFactory",
