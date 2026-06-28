@@ -37,5 +37,9 @@ spring:
       enabled: true   # <--- Включаем консоль H2
       path: /h2-console # Адрес: http://localhost:8080/h2-console
 
+bot:
+  token: ${BOT_TOKEN:YOUR_TELEGRAMBOT_TOKEN}
+  name: ${BOT_NAME:RecommendationBot}
+
 server:
   port: 8080

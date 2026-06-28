@@ -7,9 +7,9 @@ import ru.skypro.recommendationsystem.entity.RuleQuery;
 import ru.skypro.recommendationsystem.repository.DynamicRuleRepository;
 import ru.skypro.recommendationsystem.repository.RecommendationsRepository;
 import ru.skypro.recommendationsystem.service.RecommendationRuleSet;
+import ru.skypro.recommendationsystem.service.RuleStatsService;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -17,32 +17,36 @@ import java.util.stream.Collectors;
 public class DynamicRuleSet implements RecommendationRuleSet {
     private final DynamicRuleRepository dynamicRuleRepository;
     private final RecommendationsRepository recommendationsRepository;
+    private final RuleStatsService ruleStatsService;
 
     public DynamicRuleSet(DynamicRuleRepository dynamicRuleRepository,
-                          RecommendationsRepository recommendationsRepository) {
+                          RecommendationsRepository recommendationsRepository,
+                          RuleStatsService ruleStatsService) {
         this.dynamicRuleRepository = dynamicRuleRepository;
         this.recommendationsRepository = recommendationsRepository;
+        this.ruleStatsService = ruleStatsService;
     }
 
     @Override
     public List<RecommendationDTO> checkRecommendation(UUID userId) {
         return dynamicRuleRepository.findAllWithQueries().stream()
-                .map(rule -> checkRuleForUser(userId, rule))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toList()); // <-- Собираем ВСЕ совпадения
+                .filter(rule -> {
+                    boolean matches = checkRuleForUser(userId, rule);
+                    if (matches) {
+                        ruleStatsService.incrementCount(rule.getId());
+                    }
+                    return matches;
+                })
+                .map(rule -> new RecommendationDTO(
+                        rule.getProductId(),
+                        rule.getProductName(),
+                        rule.getProductText()))
+                .collect(Collectors.toList());
     }
 
-    private Optional<RecommendationDTO> checkRuleForUser(UUID userId, DynamicRule rule) {
-        boolean allConditionsMet = rule.getQueries().stream()
+    private boolean checkRuleForUser(UUID userId, DynamicRule rule) {
+        return rule.getQueries().stream()
                 .allMatch(query -> checkCondition(userId, query));
-
-        return allConditionsMet
-                ? Optional.of(new RecommendationDTO(
-                rule.getProductId(),
-                rule.getProductName(),
-                rule.getProductText()))
-                : Optional.empty();
     }
 
     private boolean checkCondition(UUID userId, RuleQuery query) {

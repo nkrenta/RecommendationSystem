@@ -19,7 +19,6 @@ import java.util.Map;
 
 @Configuration
 @Profile("test")
-// ВАЖНО: Явно указываем, какие бины использовать для репозиториев в этом контексте
 @EnableJpaRepositories(
         basePackages = "ru.skypro.recommendationsystem.repository",
         entityManagerFactoryRef = "secondEntityManagerFactory",

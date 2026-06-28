@@ -21,3 +21,7 @@ spring:
 
   liquibase:
     enabled: false
+
+bot:
+  token: test-token
+  name: TestBot
