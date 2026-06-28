@@ -4,11 +4,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import ru.skypro.recommendationsystem.service.DynamicRuleService;
 import ru.skypro.recommendationsystem.entity.DynamicRule;
+import ru.skypro.recommendationsystem.service.DynamicRuleService;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;

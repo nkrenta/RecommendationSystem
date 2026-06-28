@@ -11,10 +11,11 @@ import java.util.UUID;
 @Service
 public class DynamicRuleService {
     private final DynamicRuleRepository repository;
+    private final RuleStatsService ruleStatsService;
 
-    // Оставляем только реально используемую зависимость
-    public DynamicRuleService(DynamicRuleRepository repository) {
+    public DynamicRuleService(DynamicRuleRepository repository, RuleStatsService ruleStatsService) {
         this.repository = repository;
+        this.ruleStatsService = ruleStatsService;
     }
 
     @Transactional
@@ -35,6 +36,7 @@ public class DynamicRuleService {
         if (!repository.existsById(id)) {
             return false;
         }
+        ruleStatsService.deleteByRuleId(id);
         repository.deleteById(id);
         return true;
     }
