@@ -2,11 +2,10 @@ package ru.skypro.recommendationsystem.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.skypro.recommendationsystem.DTO.DynamicRuleListResponse;
 import ru.skypro.recommendationsystem.entity.DynamicRule;
 import ru.skypro.recommendationsystem.service.DynamicRuleService;
 
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -28,9 +27,8 @@ public class DynamicRuleController {
     }
 
     @GetMapping
-    public ResponseEntity<Map<String, List<DynamicRule>>> getAllRules() {
-        List<DynamicRule> rules = dynamicRuleService.getAllRules();
-        return ResponseEntity.ok(Map.of("data", rules));
+    public ResponseEntity<DynamicRuleListResponse> getAllRules() {
+        return ResponseEntity.ok(new DynamicRuleListResponse(dynamicRuleService.getAllRules()));
     }
 
     @DeleteMapping("{id}")

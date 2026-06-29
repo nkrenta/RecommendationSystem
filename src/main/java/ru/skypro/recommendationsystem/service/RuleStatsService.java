@@ -2,6 +2,7 @@ package ru.skypro.recommendationsystem.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.skypro.recommendationsystem.entity.DynamicRule;
 import ru.skypro.recommendationsystem.entity.RuleStats;
 import ru.skypro.recommendationsystem.repository.RuleStatsRepository;
 
@@ -18,15 +19,20 @@ public class RuleStatsService {
 
     @Transactional
     public void incrementCount(UUID ruleId) {
-        RuleStats stats = ruleStatsRepository.findByRuleId(ruleId)
-                .orElse(new RuleStats(ruleId, 0));
-        stats.setCount(stats.getCount() + 1);
-        ruleStatsRepository.save(stats);
+        int updated = ruleStatsRepository.incrementCount(ruleId);
+        if (updated == 0) {
+            RuleStats stats = new RuleStats();
+            DynamicRule rule = new DynamicRule();
+            rule.setId(ruleId);
+            stats.setDynamicRule(rule);
+            stats.setCount(1);
+            ruleStatsRepository.save(stats);
+        }
     }
 
     @Transactional
     public void deleteByRuleId(UUID ruleId) {
-        ruleStatsRepository.deleteByRuleId(ruleId);
+        ruleStatsRepository.deleteByDynamicRuleId(ruleId);
     }
 
     public List<RuleStats> getAllStats() {

@@ -12,8 +12,9 @@ public class RuleStats {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "rule_id", nullable = false, unique = true)
-    private UUID ruleId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "rule_id", nullable = false, unique = true)
+    private DynamicRule dynamicRule;
 
     @Column(name = "count", nullable = false)
     private long count;
@@ -21,8 +22,8 @@ public class RuleStats {
     public RuleStats() {
     }
 
-    public RuleStats(UUID ruleId, long count) {
-        this.ruleId = ruleId;
+    public RuleStats(DynamicRule dynamicRule, long count) {
+        this.dynamicRule = dynamicRule;
         this.count = count;
     }
 
@@ -34,12 +35,12 @@ public class RuleStats {
         this.id = id;
     }
 
-    public UUID getRuleId() {
-        return ruleId;
+    public DynamicRule getDynamicRule() {
+        return dynamicRule;
     }
 
-    public void setRuleId(UUID ruleId) {
-        this.ruleId = ruleId;
+    public void setDynamicRule(DynamicRule dynamicRule) {
+        this.dynamicRule = dynamicRule;
     }
 
     public long getCount() {
