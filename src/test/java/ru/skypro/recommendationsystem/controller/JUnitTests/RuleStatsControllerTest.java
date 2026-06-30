@@ -54,7 +54,7 @@ class RuleStatsControllerTest {
         DynamicRule rule2 = buildRule(rule2Id, "Rule2");
         when(dynamicRuleService.getAllRules()).thenReturn(List.of(rule1, rule2));
 
-        RuleStats stats1 = new RuleStats(rule1Id, 5);
+        RuleStats stats1 = new RuleStats(rule1, 5);
         when(ruleStatsService.getAllStats()).thenReturn(List.of(stats1));
 
         mockMvc.perform(get("/rule/stats"))
@@ -91,7 +91,9 @@ class RuleStatsControllerTest {
         when(dynamicRuleService.getAllRules()).thenReturn(List.of(rule));
 
         UUID orphanRuleId = UUID.randomUUID();
-        RuleStats orphanStats = new RuleStats(orphanRuleId, 10);
+        DynamicRule orphanRule = new DynamicRule();
+        orphanRule.setId(orphanRuleId);
+        RuleStats orphanStats = new RuleStats(orphanRule, 10);
         when(ruleStatsService.getAllStats()).thenReturn(List.of(orphanStats));
 
         mockMvc.perform(get("/rule/stats"))

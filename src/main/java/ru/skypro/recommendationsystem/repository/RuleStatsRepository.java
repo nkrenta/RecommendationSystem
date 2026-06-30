@@ -1,6 +1,9 @@
 package ru.skypro.recommendationsystem.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.skypro.recommendationsystem.entity.RuleStats;
 
@@ -51,46 +54,11 @@ import java.util.UUID;
  */
 @Repository
 public interface RuleStatsRepository extends JpaRepository<RuleStats, UUID> {
+    Optional<RuleStats> findByDynamicRuleId(UUID ruleId);
 
-    /**
-     * Находит запись статистики по идентификатору связанного правила.
-     * <p>
-     * Это основной метод для получения текущего значения счетчика {@code count}.
-     * Возвращает {@link Optional}, так как запись может отсутствовать, если правило
-     * было создано недавно и еще ни разу не сработало.
-     * </p>
-     *
-     * <strong>Типичный сценарий использования:</strong>
-     * <ol>
-     *     <li>Сервис получает {@code ruleId}.</li>
-     *     <li>Вызывает {@code findByRuleId(ruleId)}.</li>
-     *     <li>Если {@code Optional.isEmpty()} -> создает новую запись {@code RuleStats(ruleId, 0)}.</li>
-     *     <li>Выполняет атомарное обновление счетчика (через нативный запрос или инкремент).</li>
-     * </ol>
-     *
-     * @param ruleId идентификатор правила, для которого требуется статистика
-     * @return {@link Optional} содержащий запись статистики, или пустой Optional, если статистика не создана
-     */
-    Optional<RuleStats> findByRuleId(UUID ruleId);
+    void deleteByDynamicRuleId(UUID ruleId);
 
-    /**
-     * Удаляет запись статистики по идентификатору связанного правила.
-     * <p>
-     * Позволяет очистить статистику (счетчик срабатываний) для конкретного правила,
-     * не удаляя само правило. Полезно для:
-     * </p>
-     * <ul>
-     *     <li>Сброса статистики после завершения A/B-теста.</li>
-     *     <li>Очистки устаревших данных, если правило было изменено кардинально.</li>
-     *     <li>Ручного вмешательства администратора системы.</li>
-     * </ul>
-     *
-     * <strong>Важно:</strong> Если в базе данных настроен внешний ключ с опцией
-     * {@code ON DELETE CASCADE} от {@code dynamic_rules} к {@code rule_stats},
-     * явный вызов этого метода при удалении правила не требуется. Используйте этот метод
-     * только для выборочной очистки статистики.
-     *
-     * @param ruleId идентификатор правила, статистику которого нужно удалить
-     */
-    void deleteByRuleId(UUID ruleId);
+    @Modifying
+    @Query("UPDATE RuleStats rs SET rs.count = rs.count + 1 WHERE rs.dynamicRule.id = :ruleId")
+    int incrementCount(@Param("ruleId") UUID ruleId);
 }

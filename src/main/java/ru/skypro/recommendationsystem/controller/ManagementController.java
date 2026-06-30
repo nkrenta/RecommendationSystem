@@ -8,8 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
+import ru.skypro.recommendationsystem.DTO.AppInfoDTO;
 
 /**
  * Административный REST-контроллер для управления состоянием приложения.
@@ -118,10 +117,7 @@ public class ManagementController {
      * @return {@link ResponseEntity}, содержащий карту с полями "name" и "version"
      */
     @GetMapping("/info")
-    public ResponseEntity<Map<String, String>> getInfo() {
-        return ResponseEntity.ok(Map.of(
-                "name", buildProperties.getName(),
-                "version", buildProperties.getVersion()
-        ));
+    public ResponseEntity<AppInfoDTO> getInfo() {
+        return ResponseEntity.ok(new AppInfoDTO(buildProperties.getName(), buildProperties.getVersion()));
     }
 }

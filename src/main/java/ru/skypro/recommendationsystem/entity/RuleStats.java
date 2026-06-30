@@ -56,16 +56,9 @@ public class RuleStats {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    /**
-     * Ссылка на правило, к которому относится статистика.
-     * <p>
-     * Должен соответствовать полю {@code id} в таблице {@code dynamic_rules}.
-     * Ограничение {@code unique = true} обеспечивает строгое соответствие 1:1.
-     * Если правило удаляется, запись статистики может быть удалена каскадно (зависит от настройки FK).
-     * </p>
-     */
-    @Column(name = "rule_id", nullable = false, unique = true)
-    private UUID ruleId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "rule_id", nullable = false, unique = true)
+    private DynamicRule dynamicRule;
 
     /**
      * Агрегированный счетчик срабатываний правила.
@@ -84,14 +77,8 @@ public class RuleStats {
     public RuleStats() {
     }
 
-    /**
-     * Конструктор для инициализации новой записи статистики.
-     *
-     * @param ruleId идентификатор правила, для которого создается статистика
-     * @param count  начальное значение счетчика (обычно 0 или 1)
-     */
-    public RuleStats(UUID ruleId, long count) {
-        this.ruleId = ruleId;
+    public RuleStats(DynamicRule dynamicRule, long count) {
+        this.dynamicRule = dynamicRule;
         this.count = count;
     }
 
@@ -104,12 +91,12 @@ public class RuleStats {
         this.id = id;
     }
 
-    public UUID getRuleId() {
-        return ruleId;
+    public DynamicRule getDynamicRule() {
+        return dynamicRule;
     }
 
-    public void setRuleId(UUID ruleId) {
-        this.ruleId = ruleId;
+    public void setDynamicRule(DynamicRule dynamicRule) {
+        this.dynamicRule = dynamicRule;
     }
 
     public long getCount() {
