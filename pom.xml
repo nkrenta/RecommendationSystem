@@ -109,8 +109,24 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                    <!-- mainClass можно оставить или убрать, Spring сам найдёт его -->
                     <mainClass>ru.skypro.recommendationsystem.RecommendationSystemApplication</mainClass>
                 </configuration>
+                <!-- ВОТ ЗДЕСЬ ПРАВИЛЬНОЕ МЕСТО ДЛЯ GOALS -->
+                <executions>
+                    <execution>
+                        <id>build-info</id>
+                        <goals>
+                            <goal>build-info</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
