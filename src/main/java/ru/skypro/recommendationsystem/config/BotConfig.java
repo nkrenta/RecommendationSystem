@@ -58,7 +58,7 @@ public class BotConfig {
     public void init() {
         try {
             telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-            telegramBotsApi.registerBot(recommendationBot);
+            // telegramBotsApi.registerBot(recommendationBot); чтобы ошибка в логах не вылазила
         } catch (Exception e) {
             e.printStackTrace();
         }
